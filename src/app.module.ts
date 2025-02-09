@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { Book } from './books/entities/book.entity';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Book } from './books/entities/book.entity';
       username: 'postgres',
       password: 'example',
       database: 'nest1',
-      entities: [Book],
+      entities: [Book, User],
       synchronize: true,
     }),
     AuthModule,
