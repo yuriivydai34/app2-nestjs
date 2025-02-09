@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { Public } from 'src/auth/constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Controller('users')
 export class UsersController {
@@ -10,7 +11,10 @@ export class UsersController {
     
       @Public()
       @Post()
-      create(@Body() createUserDto: CreateUserDto) {
+      async create(@Body() createUserDto: CreateUserDto) {
+        const saltOrRounds = 10;
+        const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
+        createUserDto.password = hash;
         return this.usersService.create(createUserDto);
       }
     

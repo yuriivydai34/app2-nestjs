@@ -12,7 +12,7 @@ export class UsersService {
       private usersRepository: Repository<User>,
     ) {}
   
-    async findOne(username: string): Promise<User | null> {
+    async findOne(username: string) {
       return await this.usersRepository.findOneBy({username});
     }
 
