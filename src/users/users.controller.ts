@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Public } from 'src/auth/constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as bcrypt from 'bcrypt';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
@@ -12,9 +12,6 @@ export class UsersController {
       @Public()
       @Post()
       async create(@Body() createUserDto: CreateUserDto) {
-        const saltOrRounds = 10;
-        const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
-        createUserDto.password = hash;
         return this.usersService.create(createUserDto);
       }
     
