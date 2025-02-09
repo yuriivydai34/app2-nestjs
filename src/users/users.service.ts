@@ -33,6 +33,9 @@ export class UsersService {
     }
   
     async update(id: number, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
+      const saltOrRounds = 10;
+      const hash = await bcrypt.hash(updateUserDto.password!, saltOrRounds);
+      updateUserDto.password = hash;
       return this.usersRepository.update(id, updateUserDto);
     }
   
