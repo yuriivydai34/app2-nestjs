@@ -7,9 +7,32 @@ import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { Book } from './books/entities/book.entity';
 import { User } from './users/entities/user.entity';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import * as WinstonGraylog2 from 'winston-graylog2';
 
 @Module({
   imports: [
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.Console(),
+        new WinstonGraylog2({
+          name: 'Graylog',
+          level: 'info',
+          silent: false,
+          handleExceptions: true,
+          graylog: {
+            servers: [{ host: '127.0.0.1', port: 12201 }],
+            hostname: 'nest-app',
+            facility: 'nest-graylog',
+            bufferSize: 1400,
+          },
+          staticMeta: {
+            env: process.env.NODE_ENV || 'development',
+          },
+        }),
+      ],
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
