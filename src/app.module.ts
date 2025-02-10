@@ -14,22 +14,18 @@ import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import * as WinstonGraylog2 from 'winston-graylog2';
 
-import { createKeyv } from '@keyv/redis';
+import KeyvRedis from '@keyv/redis';
 import { Keyv } from 'keyv';
-import { CacheableMemory } from 'cacheable';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
     CacheModule.registerAsync({
+      isGlobal: true,
       useFactory: async () => {
         return {
-          stores: [
-            new Keyv({
-              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
-            }),
-            createKeyv('redis://localhost:6379'),
-          ],
+          store: new Keyv(new KeyvRedis('redis://localhost:6379')),
+          ttl: 60000
         };
       },
     }),
