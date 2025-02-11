@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entities/book.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { Like, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -23,6 +23,10 @@ export class BooksService {
 
   findOne(id: number): Promise<Book | null> {
     return this.booksRepository.findOneBy({ id })
+  }
+
+  findByName(name: string): Promise<Book[]> {
+    return this.booksRepository.findBy({ name: Like(`%${name}%`) })
   }
 
   update(id: number, updateBookDto: UpdateBookDto): Promise<UpdateResult> {
