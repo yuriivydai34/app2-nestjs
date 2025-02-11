@@ -18,7 +18,13 @@ export class BooksService {
   }
 
   findAll(): Promise<Book[]> {
-    return this.booksRepository.find();
+    return this.booksRepository.find(
+      {
+        order: {
+          name: "ASC" // "DESC"
+        }
+      }
+    );
   }
 
   findOne(id: number): Promise<Book | null> {
