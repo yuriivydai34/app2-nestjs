@@ -17,18 +17,20 @@ import * as WinstonGraylog2 from 'winston-graylog2';
 import KeyvRedis from '@keyv/redis';
 import { Keyv } from 'keyv';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AuthorsModule } from './authors/authors.module';
+import { Author } from './authors/entities/author.entity';
 
 @Module({
   imports: [
-    CacheModule.registerAsync({
-      isGlobal: true,
-      useFactory: async () => {
-        return {
-          store: new Keyv(new KeyvRedis('redis://localhost:6379')),
-          ttl: 60000
-        };
-      },
-    }),
+    // CacheModule.registerAsync({
+    //   isGlobal: true,
+    //   useFactory: async () => {
+    //     return {
+    //       store: new Keyv(new KeyvRedis('redis://localhost:6379')),
+    //       ttl: 60000
+    //     };
+    //   },
+    // }),
     WinstonModule.forRoot({
       transports: [
         new winston.transports.Console(),
@@ -56,19 +58,20 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       username: 'postgres',
       password: 'example',
       database: 'nest1',
-      entities: [Book, User],
+      entities: [Book, Author, User],
       synchronize: true,
     }),
     AuthModule,
     UsersModule,
     BooksModule,
+    AuthorsModule,
   ],
   controllers: [AppController],
   providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: CacheInterceptor,
+    // },
     AppService
   ],
 })

@@ -10,9 +10,10 @@ export class BooksService {
   constructor(
     @InjectRepository(Book)
     private booksRepository: Repository<Book>,
-  ) {}
+  ) { }
 
   create(createBookDto: CreateBookDto) {
+    console.log('createBookDto: ', createBookDto);
     return this.booksRepository.save(createBookDto);
   }
 
@@ -21,7 +22,7 @@ export class BooksService {
   }
 
   findOne(id: number): Promise<Book | null> {
-    return this.booksRepository.findOneBy({id})
+    return this.booksRepository.findOneBy({ id })
   }
 
   update(id: number, updateBookDto: UpdateBookDto): Promise<UpdateResult> {
