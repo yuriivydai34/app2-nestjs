@@ -4,6 +4,7 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entities/book.entity';
 import { Like, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class BooksService {
@@ -11,6 +12,10 @@ export class BooksService {
     @InjectRepository(Book)
     private booksRepository: Repository<Book>,
   ) { }
+
+  async paginate(options: IPaginationOptions): Promise<Pagination<Book>> {
+    return paginate<Book>(this.booksRepository, options);
+  }
 
   create(createBookDto: CreateBookDto) {
     console.log('createBookDto: ', createBookDto);
