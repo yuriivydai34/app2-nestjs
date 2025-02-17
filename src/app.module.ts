@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 
 import { AppController } from './app.controller';
@@ -19,6 +19,7 @@ import { Keyv } from 'keyv';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthorsModule } from './authors/authors.module';
 import { Author } from './authors/entities/author.entity';
+import { RequestLoggerMiddleware } from './middleware/request-logger.middleware';
 
 @Module({
   imports: [
@@ -75,4 +76,9 @@ import { Author } from './authors/entities/author.entity';
     AppService
   ],
 })
-export class AppModule {}
+export class AppModule {
+  // let's add a middleware on all routes
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}
